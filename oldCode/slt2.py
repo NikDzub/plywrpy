@@ -59,10 +59,10 @@ def clean_browsers():
 
 
 comments = [
-    "omg thats cool.",
-    "lets go dude",
-    "amazing video :)",
-    "thats pretty sweeet",
+    "Look my name 🙀😀2",
+    "Check my name out sweet",
+    "Readd my namee PEACE🙀🙀🙀",
+    "READ MY NAMEE LOVE🇺🇸",
 ]
 
 get_urls()
@@ -74,7 +74,7 @@ clean_browsers()
 
 async def block_media(route, req):
     # "image", "media", "font", "stylesheet"
-    if req.resource_type in {"x"}:
+    if req.resource_type in {"image", "media", "font", "stylesheet"}:
         await route.abort()
 
 
@@ -85,7 +85,7 @@ async def main():
             browser = await p.chromium.launch_persistent_context(
                 cwd + f"/commentBrowsers/{commenter}", headless=False
             )
-            # await browser.route("**/*", block_media)
+            await browser.route("**/*", block_media)
             page = browser.pages[0]
             await stealth_async(page)
             await page.goto("https://www.tiktok.com/search?q=", wait_until="load")
@@ -100,16 +100,25 @@ async def main():
                 async def post_comment():
                     if "@" in page.url:
                         short_url = page.url.replace("https://www.tiktok.com/", "")
-
+                        # random reply
                         await page.bring_to_front()
-                        await page.click('div[data-e2e="comment-emoji-icon"]')
+                        await page.click('span[data-e2e="comment-reply-1"]')
+                        random_comment = random.choice(comments)
+                        await page.keyboard.type(random_comment)
+                        await page.keyboard.press("Enter")
+                        await page.click('span[data-e2e="comment-like-count"]')
+                        await page.wait_for_selector("text=Comment posted")
+                        # actual comment
                         random_comment = random.choice(comments)
                         await page.keyboard.type(random_comment)
                         await page.keyboard.press("Enter")
                         await page.wait_for_selector("text=Comment posted")
+                        await page.click('span[data-e2e="comment-like-count"]')
+                        #
+                        await page.bring_to_front()
                         print(f"{commenter} >> {random_comment} >> {short_url}")
+                        await page.wait_for_timeout(1000)
                         await page.close()
-                        # await page.wait_for_timeout(3000)
 
                 await post_comment()
             await browser.close()
@@ -155,10 +164,9 @@ async def main():
                             await page.evaluate(
                                 """
                                 let comments = [
-                                  "omg thats cool.",
-                                  "lets go dude",
-                                  "amazing video :)",
-                                  "thats pretty sweeet",
+                                  "vl64ye84",
+                                  "1",
+                                  "lsdfsdfets gosdf dudesfdsf"
                                 ];
                                 document
                                     .querySelector('div[class*="DivCommentItemContainer"]')
@@ -199,13 +207,15 @@ async def main():
                     await scroll_pages(page)
 
                 print(f"{user} started loading comments")
-                await page.wait_for_timeout(30000)
+                await page.wait_for_timeout(90000)
                 print(f"{user} stoped loading comments")
 
                 for page in browser.pages:
                     if "@" in page.url:
                         short_url = page.url.replace("https://www.tiktok.com/", "")
+                        await page.bring_to_front()
                         try:
+                            print("timeout")
                             await page.wait_for_selector(
                                 'svg[liked="false"]', timeout=1000
                             )
@@ -224,6 +234,7 @@ async def main():
                 await browser.close()
 
         for browser in all_browsers.keys():
+            print(browser)
             await asyncio.gather(
                 *(find_comments(user, browser) for user in all_browsers[browser])
             )
