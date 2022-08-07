@@ -1,25 +1,30 @@
-# -*- coding: utf-8 -*-
-# 60 siodenabald1974
 import os
-import json
+import random
 import asyncio
 from playwright.async_api import async_playwright
 from playwright_stealth import stealth_async
 
-cwd = os.getcwd()
+# 150 cadremutuss1974
+# 👤 new users
+users = open("./media/usrsunform.txt")
 
+# 🖼 pfps
+pic_path = "./media/pfps/gift"
+pics = os.listdir(pic_path)
+if ".DS_Store" in pics:
+    pics.remove(".DS_Store")
 
-users = open("./usrsunform.txt")
+# 📝 bios
+bios = ["💬You have received (1) new gift🎁, Google this special code 🔍 - 33TK66KT"]
+names = ["👀", "🐯", "🐥", "🦊"]
 
-bios = ["🐼 I Got you FREE TikTok Coins, Google The CODE in my Picture! 🦊"]
-
-
+# handles
 async def block_media(route, req):
-    # "image", "media", "font"
     if req.resource_type in {"ximage", "media", "font"}:
         await route.abort()
 
 
+# ▶️
 async def main():
     for user in users:
         user = user.split(":")
@@ -30,7 +35,9 @@ async def main():
             await stealth_async(page)
             page.on(
                 "filechooser",
-                lambda file_chooser: file_chooser.set_files("./pfpics/00qq00bb.png"),
+                lambda file_chooser: file_chooser.set_files(
+                    f"{pic_path}/{random.choice(pics)}"
+                ),
             )
 
             await page.goto(
@@ -53,15 +60,29 @@ async def main():
             else:
 
                 await page.goto(f"https://www.tiktok.com/@{user[0]}", wait_until="load")
+
                 await page.click("text=Edit profile")
                 await page.click('input[type="file"]')
                 await page.click("text=Apply")
-                await page.fill('textarea[data-e2e="edit-profile-bio-input"]', bios[0])
-                await page.click('button[data-e2e="edit-profile-save"]')
-                await page.wait_for_timeout(1000)
+                await page.wait_for_timeout(500)
 
-                storage = await browser.contexts[0].storage_state(
-                    path=f"newStates/{user[0]}.json"
+                await page.fill(
+                    'textarea[data-e2e="edit-profile-bio-input"]',
+                    random.choice(bios),
+                )
+                await page.wait_for_timeout(500)
+
+                await page.fill(
+                    'input[placeholder="Name"]',
+                    random.choice(names),
+                )
+                await page.wait_for_timeout(500)
+
+                await page.click('button[data-e2e="edit-profile-save"]')
+                await page.wait_for_timeout(3000)
+
+                await browser.contexts[0].storage_state(
+                    path=f"./allStates/newStates/{user[0]}.json"
                 )
                 print(f"{user[0]} ✅")
 
