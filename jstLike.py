@@ -3,13 +3,15 @@ from playwright_stealth import stealth_async
 import asyncio
 import os
 import random
+from datetime import datetime
+
 
 # python jstLike.py &&
 
 head = False
 
 # 👤 states
-states_path = "./allStates/whiteStates"
+states_path = "./allStates/newStates"
 states = os.listdir(states_path)
 if ".DS_Store" in states:
     states.remove(".DS_Store")
@@ -306,13 +308,7 @@ famous = [
     "khaby.lame",
 ]
 
-comments = [
-    "google 33tk66kt its for you",
-    "ok bro did u google 33tk66kt",
-    "aha i see, google 33tk66kt",
-    "i apriciate it, google 33tk66kt its for you",
-    "thank you! google 33tk66kt",
-]
+comments = ["ong", "😦", "🧐🧐", "🙃 lol", "thats right", "cool", ":)", "hey!"]
 
 # handles
 async def block_media(route, req):
@@ -331,7 +327,14 @@ async def main():
     async with async_playwright() as p:
         for state in states:
 
-            browser = await p.chromium.launch(headless=head)
+            browser = await p.chromium.launch(
+                headless=head,
+                # proxy={
+                #     "server": "http://nproxy.site:10558",
+                #     "username": "aZ1nUR",
+                #     "password": "SYtmUSzaC8yF",
+                # },
+            )
 
             await browser.new_context(storage_state=f"{states_path}/{state}")
             await browser.contexts[0].route("**/*", block_media)
@@ -343,6 +346,7 @@ async def main():
             )
             await page.click("video")
             await page.reload(wait_until="load")
+            await page.wait_for_timeout(5000)
 
             vid_valid = await page.locator(
                 'div[data-e2e="comment-emoji-icon"]'
@@ -372,6 +376,9 @@ async def main():
                 await browser.contexts[0].storage_state(path=f"{states_path}/{state}")
                 # save
 
+            print(datetime.now().strftime("%H:%M"))
+            print(state)
+            print(page.url)
             await page.close()
             await browser.close()
 

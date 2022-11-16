@@ -5,31 +5,32 @@ import shutil
 import os
 import random
 
+# novella.naumova
+
 head = False
 edit_profile = True
 edit_user_name = False
 
 
 # 👤 states
-states_path = "./allStates/giftStates"
+states_path = "./allStates/newEmails"
 states = os.listdir(states_path)
 if ".DS_Store" in states:
     states.remove(".DS_Store")
 
 # 🖼 pfps
-pic_path = "./media/pfps/gift"
+pic_path = "./media/pfps/attr"
 pics = os.listdir(pic_path)
 if ".DS_Store" in pics:
     pics.remove(".DS_Store")
 
 # 📝 bios
-bio_line_1 = [
-    "Looking for The Gift? 🔍",
+bio_line_1 = ["FREE 50$ 🎁 Gift!"]
+bios_line_2 = [
+    "Google Search : O83NC63",
 ]
-bios_line_2 = ["Google it > [ site:4gift.site ]"]
 
-
-names = ["Read Bio"]
+names = ["🎁 Read Bio 🎁"]
 
 # handles
 async def block_media(route, req):
@@ -58,11 +59,14 @@ print(
 
 # ▶️
 async def main():
+    ii = 55
     i = 0
     states_len = len(states)
     async with async_playwright() as p:
         for state in states:
+            print(state)
             i = i + 1
+            ii = ii + 1
             global id
             id = False
 
@@ -70,7 +74,7 @@ async def main():
 
             browser = await p.chromium.launch(headless=head)
             await browser.new_context(storage_state=f"./{states_path}/{state}.json")
-            await browser.contexts[0].route("**/*", block_media)
+            # await browser.contexts[0].route("**/*", block_media)
             page = await browser.contexts[0].new_page()
             await stealth_async(page)
 
@@ -79,7 +83,7 @@ async def main():
             await page.goto("https://www.tiktok.com", wait_until="load")
             await page.reload(wait_until="load")
             await page.goto("https://www.tiktok.com/search/user?q=", wait_until="load")
-            await page.wait_for_timeout(2000)
+            await page.wait_for_timeout(2222000)
 
             if id != False:
                 await page.goto(f"https://www.tiktok.com/@{id}", wait_until="load")
@@ -102,7 +106,8 @@ async def main():
                     if edit_user_name:
                         await page.fill(
                             'input[placeholder="Username"]',
-                            f"1_new_gift_{i}",
+                            f"free_gifts_{ii}",
+                            timeout=5000,
                         )
                         await page.wait_for_timeout(1000)
                     # user name
@@ -111,6 +116,7 @@ async def main():
                     await page.fill(
                         'textarea[data-e2e="edit-profile-bio-input"]',
                         random.choice(bio_line_1),
+                        timeout=5000,
                     )
                     await page.wait_for_timeout(1500)
                     await page.keyboard.press("Enter")
@@ -121,8 +127,7 @@ async def main():
 
                     # display name
                     await page.fill(
-                        'input[placeholder="Name"]',
-                        random.choice(names),
+                        'input[placeholder="Name"]', random.choice(names), timeout=5000
                     )
                     await page.wait_for_timeout(1500)
                     # display name
@@ -131,15 +136,19 @@ async def main():
 
                     if edit_user_name:
                         await page.click(
-                            'button[data-e2e="set-username-popup-confirm"]'
+                            'button[data-e2e="set-username-popup-confirm"]',
+                            timeout=7000,
                         )
                     await page.wait_for_timeout(3000)
+
+                # print("time for change")
+                # await page.wait_for_timeout(60000)
 
                 # save
                 await browser.contexts[0].storage_state(
                     path=f"{states_path}/{state}.json"
                 )
-                # save
+                await page.wait_for_timeout(5000)
                 print(f"[{i}/{states_len}]{state} ✅")
 
             else:

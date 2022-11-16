@@ -8,7 +8,7 @@ import random
 head = False
 
 # 👤 states
-states_path = "./allStates/giftStates"
+states_path = "./allStates/newStates"
 states = os.listdir(states_path)
 if ".DS_Store" in states:
     states.remove(".DS_Store")
@@ -69,6 +69,7 @@ async def main():
 
             if id != False:
                 for vid in vids:
+
                     page.on(
                         "filechooser",
                         lambda file_chooser: file_chooser.set_files(

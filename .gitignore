@@ -1,4 +1,2 @@
-.DS_Store
-allStates
-media
-urls.json
+*
+!newBot.py

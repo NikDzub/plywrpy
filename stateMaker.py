@@ -4,19 +4,19 @@ import asyncio
 from playwright.async_api import async_playwright
 from playwright_stealth import stealth_async
 
-# 150 cadremutuss1974
+# 15? oomsusumpza1986
 # 👤 new users
 users = open("./media/usrsunform.txt")
 
 # 🖼 pfps
-pic_path = "./media/pfps/gift"
+pic_path = "./media/pfps/attr"
 pics = os.listdir(pic_path)
 if ".DS_Store" in pics:
     pics.remove(".DS_Store")
 
 # 📝 bios
-bios = ["💬You have received (1) new gift🎁, Google this special code 🔍 - 33TK66KT"]
-names = ["👀", "🐯", "🐥", "🦊"]
+bios = ["🔍 Google My Gift Code - 33TK66KT"]
+names = ["🎁 Bio 🎁"]
 
 # handles
 async def block_media(route, req):

@@ -1,29 +1,14 @@
 try {
   document.querySelector('body').style.backgroundColor = 'yellow';
   let comments = [
-    '1 New',
-    '(1)New Gift',
-    'New notification',
-    '1 New Surprise!',
-    'New surprize',
-    'You got a new present',
-    'Did you take the Gift?',
-    'Did you take a Gift?',
-    'Did you take your Gift?',
-    'Did you take the present?',
-    'Come Get your present!',
-    'One new present',
-    'Thats Awsome!',
-    '1 New Gift',
-    'New Gift',
-    'You got a new message',
-    'New Message',
-    'Messages(1)',
-    'You have received 1 new present.',
-    'Open New Message',
-    'Open (1) new gifts!',
-    'New (1)',
-    'New 1',
+    'Google O83NC63',
+    'OMG Google That > O83NC63',
+    'Google This Code O83NC63',
+    'Google Search for O83NC63',
+    'Did you Google O83NC63?',
+    'Hey Google this special CODE : O83NC63',
+    'Omg google search O83NC63',
+    'Go to 4gift.site in the browser',
   ];
 
   document
@@ -31,8 +16,8 @@ try {
     ?.scrollIntoView();
 
   let scrollInt = setInterval(() => {
-    window.scrollBy(0, 2);
-    window.scrollBy(0, -2);
+    window.scrollBy(0, 1);
+    window.scrollBy(0, -1);
 
     document
       .querySelectorAll('div[class*="DivCommentItemContainer"]')
@@ -46,7 +31,7 @@ try {
           const atr = document.createAttribute('plywr');
           const liked = document.createAttribute('liked');
 
-          console.log(e.textContent);
+          // console.log(e.textContent);
           e.setAttributeNode(atr);
           e.setAttribute('plywr', 'true');
           e.querySelectorAll('svg[fill="rgba(0, 0, 0, 1.0)"]').forEach((e) => {
@@ -57,6 +42,7 @@ try {
           e.remove();
         }
       });
+    document.querySelector('body').style.backgroundColor = 'green';
   }, 500);
 } catch (error) {
   document.querySelector('body').style.backgroundColor = 'red';
