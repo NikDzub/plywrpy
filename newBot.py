@@ -9,22 +9,14 @@ from playwright_stealth import stealth_async
 head = False
 
 # 👤 states
-comments_path = "./allStates/newStates"
-comment_states = os.listdir(comments_path)
-if ".DS_Store" in comment_states:
-    comment_states.remove(".DS_Store")
-
-like_path = "./allStates/likeStates"
-like_states = os.listdir(like_path)
-if ".DS_Store" in like_states:
-    like_states.remove(".DS_Store")
-
-repliers = os.listdir("./allStates/likeStates")
+live_path = "./allStates/liveStates"
+live_states = os.listdir(live_path)
+if ".DS_Store" in live_states:
+    live_states.remove(".DS_Store")
 
 searcher = "./allStates/oneOnly/ihptto.json"
 
-
-# handles
+# 🔧 handles
 async def block_media(route, req):
     if req.resource_type in {"image", "media", "font", "stylesheet", "css"}:
         try:
@@ -33,13 +25,13 @@ async def block_media(route, req):
             pass
 
 
-# START
-
-
 async def main():
+    urls = []
     async with async_playwright() as p:
 
-        async def find_url():
+        # 🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊
+
+        async def find_urls():
             browser = await p.chromium.launch(
                 headless=head,
                 # proxy={
@@ -50,133 +42,87 @@ async def main():
             )
             page = await browser.new_page()
             await stealth_async(page)
-            # await browser.contexts[0].route("**/*", block_media)
+            await browser.contexts[0].route("**/*", block_media)
 
             state_file = open(f"{searcher}")
             state_json = json.load(state_file)
             await browser.contexts[0].add_cookies(state_json["cookies"])
+            # ⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️
 
             await page.goto("https://www.tiktok.com/live", wait_until="load")
             await page.click("text=Click to watch LIVE", timeout=5000)
-
             await page.click("div[data-e2e='live-side-more-button']")
+            await page.wait_for_selector("text=See less")
+
             all_views = await page.query_selector_all("div[data-e2e='person-count']")
+
+            chosen_k = []
             for view in all_views:
                 view_count = await view.inner_text()
-                print(view_count)
-            print("hereee")
-            await page.wait_for_timeout(43543435)
+                if "K" in view_count:
+                    chosen_k.append([view, view_count.replace("K", "")])
+            chosen_k.sort(key=lambda x: x[1], reverse=True)
 
-        await find_url()
+            await chosen_k[0][0].click()
 
-    #     print("\n💬" + "\033[96m {}\033[00m".format(datetime.now().strftime("%H:%M")))
+            urls.append(page.url)
+            print(page.url)
 
-    #     j = len(like_states) * len(tiktok_urls)
-    #     global i
-    #     i = 0
-    #     global c
-    #     c = 0
+            await page.close()
+            await browser.close()
 
-    #     static_like_states = []
-    #     for state in like_states:
-    #         state_file = open(f"{like_path}/{state}")
-    #         state_json = json.load(state_file)
-    #         static_like_states.append([state_json["cookies"], state])
-    #     random.shuffle(static_like_states)
+        await find_urls()
 
-    #     jsEval = open("./jsEval.js").read()
+        # 🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊🦊
 
-    #     async def find_comments(url):
+        async def spam_urls(state):
 
-    #         # 💚💚💚💚
-    #         start_time = datetime.now()
-    #         for state in static_like_states:
-    #             if (datetime.now() - start_time).seconds > 60 * 25:
-    #                 # max time
-    #                 break
+            browser = await p.chromium.launch(
+                headless=head,
+                # proxy={
+                #     "server": "http://nproxy.site:10558",
+                #     "username": "aZ1nUR",
+                #     "password": "SYtmUSzaC8yF",
+                # },
+            )
+            page = await browser.new_page()
+            await stealth_async(page)
+            await browser.contexts[0].route("**/*", block_media)
 
-    #             global i
-    #             global c
-    #             i += 1
-    #             print("\r" + f" [{i} / {j}] [{c}]", end="")
+            state_file = open(f"{live_path}/{state}")
+            state_json = json.load(state_file)
+            await browser.contexts[0].add_cookies(state_json["cookies"])
+            # ⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️⚙️
 
-    #             browser = await p.chromium.launch(headless=head)
-    #             page = await browser.new_page()
-    #             await stealth_async(page)
-    #             await browser.contexts[0].route("**/*", block_media)
-    #             await browser.contexts[0].add_cookies(state[0])
-    #             await page.goto(url, wait_until="load")
+            await page.goto(urls[0], wait_until="load")
+            await page.wait_for_selector("div[data-e2e='chat-message']", timeout=60000)
 
-    #             not_avl = await page.wait_for_selector(
-    #                 "text=Video currently unavailable", timeout=1000
-    #             )
-    #             if not_avl != None:
-    #                 break
+            await page.click("div[data-e2e='comment-emoji-icon']")
+            await page.wait_for_timeout(20000)
+            print("start commenting")
 
-    #             await page.evaluate(jsEval)
-    #             await page.click("text=Add comment...", timeout=5000)
+            comments = [
+                "GOOGLE THIS > O83NC63 😋😮",
+                "GOOGLE SEARCH THIS > O83NC63 😮",
+                "OMG GOOGLE O83NC63  😮",
+                "😮 GOOGLE THIS > O83NC63 😮",
+                "Google search O83NC63 , FREE GIFT",
+                "FREE COINS - Google O83NC63",
+                "FREE COINS - Google Search : O83NC63",
+                "OMG OMG FREE COINS - Google Search : O83NC63",
+            ]
 
-    #             if i < 20:
-    #                 await page.wait_for_timeout(60000)
-    #                 hearts = await page.query_selector_all(
-    #                     'span[data-e2e="comment-like-count"]'
-    #                 )
-    #                 if hearts != None and hearts.__len__() > 0:
-    #                     for heart in hearts:
-    #                         await heart.click()
-    #                         c += 1
-    #                         print("\r" + f" [{i} / {j}] [{c}]", end="")
-    #                         await page.wait_for_timeout(2000)
-    #                 # found = await page.wait_for_selector("div[plywr]", timeout=1000)
+            for i in range(5):
+                await page.keyboard.type(random.choice(comments), delay=100)
+                await page.keyboard.press("Enter")
+                await page.wait_for_timeout(5000)
 
-    #             else:
-    #                 hearts = await page.query_selector_all(
-    #                     'span[data-e2e="comment-like-count"]'
-    #                 )
-    #                 if hearts != None and hearts.__len__() > 0:
-    #                     for heart in hearts:
-    #                         await heart.click()
-    #                         c += 1
-    #                         print("\r" + f" [{i} / {j}] [{c}]", end="")
-    #                         await page.wait_for_timeout(2000)
-    #                 # found = await page.wait_for_selector("div[plywr]", timeout=20000)
+            print("finish")
+            await page.wait_for_timeout(34324324)
+            await page.close()
+            await browser.close()
 
-    #             # if found != None:
-    #             #     not_liked = await page.query_selector_all(
-    #             #         'div[plywr] svg[fill="rgba(22, 24, 35, 1)"]'
-    #             #     )
-    #             #     if len(not_liked) > 0:
-    #             #         for heart in not_liked:
-    #             #             await heart.click()
-    #             #             await page.wait_for_timeout(1000)
-    #             #             c += 1
-    #             #             print("\r" + f" [{i} / {j}] [{c}]", end="")
-
-    #             # reply
-    #             # r = [1, 0, 0]
-    #             # if state[1] in repliers and random.choice(r) == 1:
-    #             #     await page.click(
-    #             #         'span[data-e2e="comment-reply-1"]', timeout=1000
-    #             #     )
-    #             #     await page.keyboard.type(random.choice(reply_comments))
-    #             #     await page.keyboard.press("Enter")
-    #             #     # await page.wait_for_timeout(1000)
-
-    #             # else:
-    #             #     pass
-    #             # print("🔍❌ " + "\033[91m {}\033[00m".format(url))
-
-    #             # save
-    #             await browser.contexts[0].storage_state(path=f"{like_path}/{state[1]}")
-    #             # save
-    #             # 💚💚💚💚
-
-    #             await page.close()
-    #             await browser.close()
-
-    #     await asyncio.gather(*(find_comments(url) for url in tiktok_urls))
-
-    # print("\n🏁" + "\033[96m {}\033[00m".format(datetime.now().strftime("%H:%M")))
+        await asyncio.gather(*(spam_urls(state) for state in live_states))
 
 
 asyncio.run(main())
