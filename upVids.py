@@ -8,7 +8,7 @@ import random
 head = False
 
 # 👤 states
-states_path = "./allStates/newStates"
+states_path = "./allStates/newEmails"
 states = os.listdir(states_path)
 if ".DS_Store" in states:
     states.remove(".DS_Store")
@@ -91,6 +91,7 @@ async def main():
                     await page.frame_locator("iframe").locator(
                         ".modal-title-container"
                     ).click()
+                    # await page.click("text=Post")
 
                     await page.wait_for_timeout(1000)
 

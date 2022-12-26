@@ -13,7 +13,7 @@ from playwright_stealth import stealth_async
 head = False
 
 # 👤 states
-comments_path = "./allStates/newStates"
+comments_path = "./allStates/newEmails"
 comment_states = os.listdir(comments_path)
 if ".DS_Store" in comment_states:
     comment_states.remove(".DS_Store")
@@ -28,14 +28,20 @@ repliers = os.listdir("./allStates/likeStates")
 
 # 💬 comments
 comments = [
-    "Google O83NC63",
-    "OMG Google That > O83NC63",
-    "Google This Code O83NC63",
-    "Google Search for O83NC63",
-    "Did you Google O83NC63?",
+    "Google O83NC63, Tell us what did u find",
+    "OMG Google That > O83NC63 Tell us what did u get!",
+    "Google This Special Code O83NC63",
+    "Google Search O83NC63 its all for FREE",
+    "Did you Google O83NC63 yet guys??",
     "Hey Google this special CODE : O83NC63",
-    "Omg google search O83NC63",
-    "Go to 4gift.site in the browser",
+    "Omg google search O83NC63, Tell me what u found",
+    "Google O83NC63, Tell us what did u find",
+    "OMG Google That > O83NC63 Tell us what did u get!",
+    "Google This Special Code O83NC63",
+    "Google Search O83NC63 its all for FREE",
+    "Did you Google O83NC63 yet guys??",
+    "Hey Google this special CODE : O83NC63",
+    "Omg google search O83NC63, Tell me what u found",
 ]
 reply_comments = [
     "yo",
@@ -102,18 +108,22 @@ async def main():
             )
             page = await browser.new_page()
             await stealth_async(page)
-            await browser.contexts[0].route("**/*", block_media)
+            # await browser.contexts[0].route("**/*", block_media)
 
             state_file = open(f"{comments_path}/{comment_states[0]}")
             state_json = json.load(state_file)
             await browser.contexts[0].add_cookies(state_json["cookies"])
 
             await page.goto(url, wait_until="load")
+
+            await page.goto("https://www.google.com")
+            await page.wait_for_timeout(454354354)
             valid = await page.wait_for_selector(
                 'div[data-e2e="comment-emoji-icon"]', timeout=10000
             )
 
             if valid == None:
+
                 tiktok_urls.remove(url)
                 await page.close()
                 await browser.close()
@@ -133,6 +143,7 @@ async def main():
                     state_json = json.load(state_file)
                     await browser.contexts[0].add_cookies(state_json["cookies"])
                     await page.reload(wait_until="load")
+                    await page.wait_for_timeout(10000)
 
                     await page.click("text=Add comment...", timeout=5000)
 
@@ -164,7 +175,7 @@ async def main():
                 await page.close()
                 await browser.close()
 
-        await asyncio.gather(*(comment_w_states(url) for url in tiktok_urls))
+        # await asyncio.gather(*(comment_w_states(url) for url in tiktok_urls))
 
         print("\n💬" + "\033[96m {}\033[00m".format(datetime.now().strftime("%H:%M")))
 

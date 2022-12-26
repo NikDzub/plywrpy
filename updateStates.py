@@ -5,7 +5,7 @@ import shutil
 import os
 import random
 
-# novella.naumova
+# O83NC63 TB4AB40
 
 head = False
 edit_profile = True
@@ -25,12 +25,12 @@ if ".DS_Store" in pics:
     pics.remove(".DS_Store")
 
 # 📝 bios
-bio_line_1 = ["FREE 50$ 🎁 Gift!"]
+bio_line_1 = ["Your 🎁 is HERE"]
 bios_line_2 = [
-    "Google Search : O83NC63",
+    "Just Google O83NC63",
 ]
 
-names = ["🎁 Read Bio 🎁"]
+names = ["🎁 in my Bio"]
 
 # handles
 async def block_media(route, req):
@@ -82,10 +82,20 @@ async def main():
             page.on("response", lambda res: get_user_id(res))
             await page.goto("https://www.tiktok.com", wait_until="load")
             await page.reload(wait_until="load")
-            await page.goto("https://www.tiktok.com/search/user?q=", wait_until="load")
-            await page.wait_for_timeout(2222000)
 
-            if id != False:
+            # comment on a video to get to the profile easier
+            await page.click("video")
+            await page.wait_for_timeout(2000)
+            await page.click('div[data-e2e="comment-emoji-icon"]')
+            await page.wait_for_timeout(2000)
+            await page.click('li[data-index="8"]')
+            await page.wait_for_timeout(2000)
+            await page.keyboard.press("Enter")
+            posted = await page.wait_for_selector("text=Comment posted")
+
+            await page.goto("https://www.tiktok.com/search/user?q=", wait_until="load")
+
+            if posted != None:
                 await page.goto(f"https://www.tiktok.com/@{id}", wait_until="load")
 
                 if edit_profile:
@@ -106,7 +116,7 @@ async def main():
                     if edit_user_name:
                         await page.fill(
                             'input[placeholder="Username"]',
-                            f"free_gifts_{ii}",
+                            f"free_gift_{ii}ca",
                             timeout=5000,
                         )
                         await page.wait_for_timeout(1000)
@@ -153,12 +163,12 @@ async def main():
 
             else:
                 print(f"[{i}/{states_len}]{state} ❌")
-                cwd = os.getcwd()
-                sp = states_path.replace("./", "")  # "allStates/likeStates"
-                shutil.move(
-                    f"{cwd}/{sp}/{state}.json",
-                    f"{cwd}/allStates/brokenStates/{state}.json",
-                )
+                # cwd = os.getcwd()
+                # sp = states_path.replace("./", "")  # "allStates/likeStates"
+                # shutil.move(
+                #     f"{cwd}/{sp}/{state}.json",
+                #     f"{cwd}/allStates/brokenStates/{state}.json",
+                # )
                 # os.remove(f"{states_path}/{state}.json")
 
             await page.close()
