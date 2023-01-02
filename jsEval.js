@@ -2571,8 +2571,9 @@
 
 let comments = [
   'Google 4gift.site',
-  'Google search 4gift.site',
-  'Wow Google 4gift.site',
+  'Google 4GIFT.SITE',
+  'Google 4GIFT.SlTE',
+  'Google 4GlFt.SITE',
 ];
 
 data.forEach((d) => {
