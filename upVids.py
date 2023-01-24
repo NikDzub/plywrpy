@@ -54,7 +54,10 @@ async def main():
 
             browser = await p.chromium.launch(headless=head)
 
-            await browser.new_context(storage_state=f"./{states_path}/{state}.json")
+            await browser.new_context(
+                storage_state=f"./{states_path}/{state}.json",
+                user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Mobile/15E148 Safari/604.1",
+            )
             # await browser.contexts[0].route("**/*", block_media)
             page = await browser.contexts[0].new_page()
             await stealth_async(page)
@@ -92,7 +95,7 @@ async def main():
                         ".modal-title-container"
                     ).click()
                     # await page.click("text=Post")
-
+                    # print("5")
                     await page.wait_for_timeout(1000)
 
                 # save

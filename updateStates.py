@@ -25,12 +25,12 @@ if ".DS_Store" in pics:
     pics.remove(".DS_Store")
 
 # 📝 bios
-bio_line_1 = ["Your 🎁 is HERE"]
+bio_line_1 = ["GOOGLE SEARCH THIS > 4GIFT.SITE"]
 bios_line_2 = [
-    "Just Google O83NC63",
+    "You Have a Special 🎁!!!",
 ]
 
-names = ["🎁 in my Bio"]
+names = ["🍬💗Read My Bio?💗🍬"]
 
 # handles
 async def block_media(route, req):
